@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Record</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Add to <%= table %> Table</h1>
+
+  <% if (message) { %><div class="success"><%= message %></div><% } %>
+  <% if (error) { %><div class="error"><%= error %></div><% } %>
+
+  <form method="POST" action="/add/<%= table %>">
+    <% if (table === "Movies") { %>
+      <input name="movie_name" placeholder="Movie Name" required>
+      <input name="genre" placeholder="Genre" required>
+      <input name="duration" type="number" placeholder="Duration" required>
+    <% } else if (table === "Theaters") { %>
+      <input name="theater_name" placeholder="Theater Name" required>
+      <input name="location" placeholder="Location" required>
+    <% } else if (table === "Showtimes") { %>
+      <input name="movie_id" placeholder="Movie ID" required>
+      <input name="theater_id" placeholder="Theater ID" required>
+      <input type="date" name="show_date" required>
+      <input type="time" name="show_time" required>
+    <% } else if (table === "Bookings") { %>
+      <input name="user_id" placeholder="User ID" required>
+      <input name="showtime_id" placeholder="Showtime ID" required>
+      <input name="seats_booked" placeholder="Seats Booked" required>
+    <% } %>
+    <button type="submit">Add Record</button>
+  </form>
+
+  <a href="/" class="add-btn">← Back</a>
+</body>
+</html>
