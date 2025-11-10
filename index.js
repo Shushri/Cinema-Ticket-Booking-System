@@ -20,7 +20,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Helper for primary key
+// Helper to get primary key field
 function getIdField(table) {
   switch (table) {
     case "Movies": return "movie_id";
@@ -45,7 +45,7 @@ app.post("/view", async (req, res) => {
     res.render("index.ejs", { table: selectedTable, data: rows, error: null, pk });
   } catch (err) {
     console.error(err);
-    res.render("index.ejs", { table: null, data: null, error: "Error fetching data.", pk: null });
+    res.render("index.ejs", { table: null, data: null, error: "❌ Error fetching data.", pk: null });
   }
 });
 
