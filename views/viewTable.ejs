@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= table %> Table</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1><%= table %> Table</h1>
+  <a href="/" class="add-btn">🏠 Back to Home</a>
+  <a href="/add/<%= table %>" class="add-btn">+ Add Record</a>
+
+  <% if (error) { %>
+    <p class="error"><%= error %></p>
+  <% } %>
+
+  <% if (data.length > 0) { %>
+    <table>
+      <tr>
+        <% Object.keys(data[0]).forEach(col => { %>
+          <th><%= col %></th>
+        <% }) %>
+        <th>Actions</th>
+      </tr>
+      <% data.forEach(row => { %>
+        <tr>
+          <% Object.values(row).forEach(val => { %>
+            <td><%= val %></td>
+          <% }) %>
+          <td>
+            <a class="edit-btn" href="/edit/<%= table %>/<%= row[pk] %>">Edit</a>
+            <form action="/delete/<%= table %>/<%= row[pk] %>" method="POST" style="display:inline;">
+              <button class="delete-btn">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } else { %>
+    <p class="no-records">No records found.</p>
+  <% } %>
+</body>
+</html>

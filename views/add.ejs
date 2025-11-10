@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Add Record</title>
+  <title>Add Record to <%= table %></title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Add to <%= table %> Table</h1>
+  <h1>➕ Add to <%= table %> Table</h1>
+  <a href="/view/<%= table %>" class="add-btn">← Back to Table</a>
 
-  <% if (message) { %><div class="success"><%= message %></div><% } %>
-  <% if (error) { %><div class="error"><%= error %></div><% } %>
+  <% if (message) { %>
+    <p class="success"><%= message %></p>
+  <% } %>
+  <% if (error) { %>
+    <p class="error"><%= error %></p>
+  <% } %>
 
   <form method="POST" action="/add/<%= table %>">
     <% if (table === "Movies") { %>
       <input name="movie_name" placeholder="Movie Name" required>
       <input name="genre" placeholder="Genre" required>
-      <input name="duration" type="number" placeholder="Duration" required>
+      <input type="number" name="duration" placeholder="Duration (mins)" required>
     <% } else if (table === "Theaters") { %>
       <input name="theater_name" placeholder="Theater Name" required>
       <input name="location" placeholder="Location" required>
@@ -30,7 +35,5 @@
     <% } %>
     <button type="submit">Add Record</button>
   </form>
-
-  <a href="/" class="add-btn">← Back</a>
 </body>
 </html>

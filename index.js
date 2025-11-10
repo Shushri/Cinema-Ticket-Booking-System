@@ -4,7 +4,6 @@ import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
 dotenv.config();
-
 const app = express();
 const port = 3000;
 
@@ -20,7 +19,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Helper to get primary key field
+// Helper for primary key
 function getIdField(table) {
   switch (table) {
     case "Movies": return "movie_id";
@@ -31,21 +30,22 @@ function getIdField(table) {
   }
 }
 
-// Home page
+// Home page → just show table names with view button
 app.get("/", (req, res) => {
-  res.render("index.ejs", { table: null, data: null, error: null, pk: null });
+  const tables = ["Movies", "Theaters", "Showtimes", "Bookings"];
+  res.render("index.ejs", { tables });
 });
 
-// View selected table
-app.post("/view", async (req, res) => {
-  const selectedTable = req.body.table;
+// View a specific table
+app.get("/view/:table", async (req, res) => {
+  const { table } = req.params;
+  const pk = getIdField(table);
   try {
-    const [rows] = await db.query(`SELECT * FROM ${selectedTable}`);
-    const pk = getIdField(selectedTable);
-    res.render("index.ejs", { table: selectedTable, data: rows, error: null, pk });
+    const [rows] = await db.query(`SELECT * FROM ${table}`);
+    res.render("viewTable.ejs", { table, data: rows, pk, error: null });
   } catch (err) {
     console.error(err);
-    res.render("index.ejs", { table: null, data: null, error: "❌ Error fetching data.", pk: null });
+    res.render("viewTable.ejs", { table, data: [], pk, error: "❌ Error fetching data." });
   }
 });
 
@@ -58,7 +58,6 @@ app.get("/add/:table", (req, res) => {
 app.post("/add/:table", async (req, res) => {
   const { table } = req.params;
   const b = req.body;
-
   try {
     if (table === "Movies")
       await db.query("INSERT INTO Movies (movie_name, genre, duration) VALUES (?, ?, ?)", [b.movie_name, b.genre, b.duration]);
@@ -68,8 +67,7 @@ app.post("/add/:table", async (req, res) => {
       await db.query("INSERT INTO Showtimes (movie_id, theater_id, show_date, show_time) VALUES (?, ?, ?, ?)", [b.movie_id, b.theater_id, b.show_date, b.show_time]);
     else if (table === "Bookings")
       await db.query("INSERT INTO Bookings (user_id, showtime_id, seats_booked) VALUES (?, ?, ?)", [b.user_id, b.showtime_id, b.seats_booked]);
-
-    res.render("add.ejs", { table, message: "✅ Record added successfully!", error: null });
+    res.redirect(`/view/${table}`);
   } catch (err) {
     console.error(err);
     res.render("add.ejs", { table, message: null, error: "❌ Error adding record." });
@@ -80,7 +78,6 @@ app.post("/add/:table", async (req, res) => {
 app.post("/delete/:table/:id", async (req, res) => {
   const { table, id } = req.params;
   const idField = getIdField(table);
-
   try {
     await db.beginTransaction();
 
@@ -100,13 +97,11 @@ app.post("/delete/:table/:id", async (req, res) => {
     }
 
     await db.commit();
-
-    const [rows] = await db.query(`SELECT * FROM ${table}`);
-    res.render("index.ejs", { table, data: rows, error: null, pk: idField });
+    res.redirect(`/view/${table}`);
   } catch (err) {
     await db.rollback();
     console.error("Delete error:", err);
-    res.render("index.ejs", { table: null, data: null, error: "❌ Failed to delete record.", pk: null });
+    res.redirect(`/view/${table}`);
   }
 });
 
@@ -127,7 +122,6 @@ app.get("/edit/:table/:id", async (req, res) => {
 app.post("/edit/:table/:id", async (req, res) => {
   const { table, id } = req.params;
   const b = req.body;
-
   try {
     if (table === "Movies")
       await db.query("UPDATE Movies SET movie_name=?, genre=?, duration=? WHERE movie_id=?", [b.movie_name, b.genre, b.duration, id]);
@@ -137,8 +131,7 @@ app.post("/edit/:table/:id", async (req, res) => {
       await db.query("UPDATE Showtimes SET movie_id=?, theater_id=?, show_date=?, show_time=? WHERE showtime_id=?", [b.movie_id, b.theater_id, b.show_date, b.show_time, id]);
     else if (table === "Bookings")
       await db.query("UPDATE Bookings SET user_id=?, showtime_id=?, seats_booked=? WHERE booking_id=?", [b.user_id, b.showtime_id, b.seats_booked, id]);
-
-    res.render("edit.ejs", { table, record: b, message: "✅ Record updated successfully!", error: null });
+    res.redirect(`/view/${table}`);
   } catch (err) {
     console.error(err);
     res.render("edit.ejs", { table, record: b, message: null, error: "❌ Error updating record." });

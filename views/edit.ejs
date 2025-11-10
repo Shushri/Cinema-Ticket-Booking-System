@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Edit Record</title>
+  <title>Edit <%= table %> Record</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <h1>Edit <%= table %> Record</h1>
+  <h1>✏️ Edit <%= table %> Record</h1>
+  <a href="/view/<%= table %>" class="add-btn">← Back to Table</a>
 
-  <% if (message) { %><div class="success"><%= message %></div><% } %>
-  <% if (error) { %><div class="error"><%= error %></div><% } %>
+  <% if (message) { %>
+    <p class="success"><%= message %></p>
+  <% } %>
+  <% if (error) { %>
+    <p class="error"><%= error %></p>
+  <% } %>
 
   <form method="POST" action="/edit/<%= table %>/<%= record[Object.keys(record)[0]] %>">
     <% if (table === "Movies") { %>
@@ -30,7 +35,5 @@
     <% } %>
     <button type="submit">Save Changes</button>
   </form>
-
-  <a href="/" class="add-btn">← Back</a>
 </body>
 </html>

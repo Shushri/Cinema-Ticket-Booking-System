@@ -10,31 +10,29 @@ body {
 h1 {
   color: #ffcc00;
   margin-top: 30px;
-  letter-spacing: 1px;
 }
 
-form {
+.table-card {
+  background: #222;
+  border-radius: 10px;
   margin: 20px auto;
-  text-align: center;
+  width: 50%;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.1);
 }
 
-select, input, button {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  margin: 5px;
-}
-
-button {
-  background-color: #ffcc00;
+.view-btn {
+  display: inline-block;
+  background: #ffcc00;
   color: black;
   font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
 }
 
-button:hover {
-  background-color: #ffaa00;
+.view-btn:hover {
+  background: #ffaa00;
 }
 
 table {
@@ -42,7 +40,6 @@ table {
   border-collapse: collapse;
   width: 80%;
   background: #222;
-  color: white;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
@@ -82,12 +79,11 @@ a, .delete-btn {
 }
 
 .add-btn {
-  display: inline-block;
   background: #28a745;
   color: white;
   padding: 10px 18px;
   border-radius: 6px;
-  margin: 20px auto;
+  margin: 10px;
   text-decoration: none;
 }
 
@@ -95,12 +91,8 @@ a, .delete-btn {
   background: #218838;
 }
 
-.success {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.error {
-  color: #ff5555;
-  font-weight: bold;
+.no-records {
+  margin: 15px;
+  color: #aaa;
+  font-style: italic;
 }
